@@ -5,3 +5,6 @@ node index.js
 cp ast.json ../ast.json
 rm ast.json
 cd ../
+go run .
+cp vjs.js.v dist/vjs.js.v
+rm vjs.js.v

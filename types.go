@@ -1,5 +1,7 @@
 package main
 
+type Empty struct{}
+
 type Ast struct {
 	Declarations []Declaration `json:"declarations"`
 	End          int64         `json:"end"`
