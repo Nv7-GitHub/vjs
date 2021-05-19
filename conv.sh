@@ -6,5 +6,6 @@ cp ast.json ../ast.json
 rm ast.json
 cd ../
 go run .
+mkdir dist
 cp vjs.js.v dist/vjs.js.v
 rm vjs.js.v

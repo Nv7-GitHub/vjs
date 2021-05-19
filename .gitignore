@@ -20,5 +20,6 @@ formatted.json
 # Stuff created during conversion
 ast.json
 astgen/lib.dom.d.ts
+vjs.js.v
 
 */node_modules/*
