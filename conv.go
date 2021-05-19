@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 var out = ""
@@ -16,6 +15,7 @@ var builtins = map[string]string{
 }
 
 func addComponent(name string) {
+	fmt.Println(name)
 	_, exists := componentsAdded[name]
 	if exists {
 		fmt.Println(name)
@@ -25,44 +25,18 @@ func addComponent(name string) {
 	// Add Dependencies for properties
 	decl := decls[name]
 	for _, prop := range decl.Properties {
-		_, exists := builtins[prop.Type]
-		if !exists {
-			addComponent(prop.Type)
-		}
+		fixType(prop.Type)
 	}
 
 	// Add struct and properties
-	out += fmt.Sprintf("interface JS.%s {\n", name)
+	out += fmt.Sprintf("interface JS.%s {\n", decl.Name)
 	for _, prop := range decl.Properties {
 		// " | " Types, need to find which one to select, right now takes non-builtin one
-		if strings.Contains(prop.Type, "|") {
-			types := strings.Split(prop.Type, "|")
-			for i, typ := range types {
-				types[i] = strings.TrimSpace(typ)
-			}
+		prop.Type = fixType(prop.Type)
 
-			hasFound := false
-			for _, typ := range types {
-				_, exists := builtins[typ]
-				if !exists {
-					addComponent(typ)
-					hasFound = true
-					prop.Type = "JS." + typ
-				}
-			}
-
-			// Haven't found non-builtin type, just use the first one (also needs to be fixed)
-			if !hasFound {
-				prop.Type = types[0]
-			}
-		}
-
-		conved, exists := builtins[prop.Type]
-		if exists {
-			prop.Type = conved
-		}
-
-		out += fmt.Sprintf("	%s %s\n", prop.Name, prop.Type)
+		mut := ""
+		if !prop.Isstat
+		out += fmt.Sprintf("%s	%s %s\n", prop.Name, prop.Type)
 	}
 	out += "}\n"
 
@@ -77,13 +51,7 @@ func addComponent(name string) {
 			}
 
 			// Add dependencies for method
-			conved, exists := builtins[param.Type]
-			if !exists {
-				addComponent(param.Type)
-				param.Type = "JS." + param.Type
-			} else {
-				param.Type = conved
-			}
+			param.Type = fixType(param.Type)
 
 			me += param.Name + " " + param.Type
 		}
@@ -91,17 +59,13 @@ func addComponent(name string) {
 		// Add return type for method
 		if m.Type != "void" {
 			// Add dependency for return type
-			conved, exists := builtins[m.Type]
-			if !exists {
-				addComponent(m.Type)
-				m.Type = "JS." + m.Type
-			} else {
-				m.Type = conved
-			}
+			m.Type = fixType(m.Type)
 
 			me += " " + m.Type
 		}
 
 		out += me + ") {} \n"
 	}
+
+	componentsAdded[name] = Empty{}
 }
