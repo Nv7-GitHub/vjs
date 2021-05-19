@@ -2,31 +2,30 @@ package main
 
 import (
 	_ "embed"
-	"encoding/json"
+	"fmt"
 	"os"
 )
 
 //go:embed lib.dom.d.ts
 var tsCode string
 
-var decls = make(map[string]Declaration)
+var decls = make(map[string]Interface)
+var out string
 
 func main() {
-	var ast Ast
-	err := json.Unmarshal(astRaw, &ast)
-	if err != nil {
-		panic(err)
-	}
+	decls = parseCode(tsCode)
 
-	for _, decl := range ast.Declarations {
-		_, exists := decls[decl.Name]
-		if !exists {
-			decls[decl.Name] = decl
+	d := decls["HTMLElement"]
+	fmt.Println(d.Name, d.Implements)
+	for _, method := range d.Methods {
+		fmt.Println("    ", method.Name, method.ReturnType)
+		for _, param := range method.Parameters {
+			fmt.Println("    ", "    ", param.Name, param.Type)
 		}
 	}
-
-	// Add HTMLElement
-	addComponent("HTMLElement")
+	for _, prop := range d.Properties {
+		fmt.Println("    ", prop.IsReadonly, prop.Name, prop.Type)
+	}
 
 	// Save to file
 	outFile, err := os.Create("vjs.js.v")
