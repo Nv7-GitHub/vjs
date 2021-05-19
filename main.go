@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-//go:embed ast.json
-var astRaw []byte
+//go:embed lib.dom.d.ts
+var tsCode string
 
 var decls = make(map[string]Declaration)
 
