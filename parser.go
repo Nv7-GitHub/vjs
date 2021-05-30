@@ -31,6 +31,8 @@ func parseCode(code string) map[string]Interface {
 
 		// Get properties
 		props := propRe.FindAllStringSubmatch(intf[2], -1)
+		fns := make(map[string]Method)
+
 		for _, match := range props {
 			// Is property
 			if match[5] != "" {
@@ -56,12 +58,16 @@ func parseCode(code string) map[string]Interface {
 					i++
 				}
 
-				in.Methods = append(in.Methods, Method{
+				fns[match[1]] = Method{
 					Name:       match[1],
 					Parameters: pars,
 					ReturnType: match[3],
-				})
+				}
 			}
+		}
+
+		for _, fn := range fns {
+			in.Methods = append(in.Methods, fn)
 		}
 
 		out[in.Name] = in

@@ -2,30 +2,20 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
 	"os"
+	"strings"
 )
 
 //go:embed lib.dom.d.ts
 var tsCode string
 
 var decls = make(map[string]Interface)
-var out string
+var out = &strings.Builder{}
 
 func main() {
 	decls = parseCode(tsCode)
 
-	d := decls["HTMLElement"]
-	fmt.Println(d.Name, d.Implements)
-	for _, method := range d.Methods {
-		fmt.Println("    ", method.Name, method.ReturnType)
-		for _, param := range method.Parameters {
-			fmt.Println("    ", "    ", param.Name, param.Type)
-		}
-	}
-	for _, prop := range d.Properties {
-		fmt.Println("    ", prop.IsReadonly, prop.Name, prop.Type)
-	}
+	addComponent("HTMLElement")
 
 	// Save to file
 	outFile, err := os.Create("vjs.js.v")
@@ -33,7 +23,7 @@ func main() {
 		panic(err)
 	}
 
-	_, err = outFile.Write([]byte(out))
+	_, err = outFile.Write([]byte(out.String()))
 	if err != nil {
 		panic(err)
 	}
