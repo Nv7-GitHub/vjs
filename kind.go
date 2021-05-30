@@ -43,5 +43,5 @@ func getKind(kind string) string {
 		return newKind
 	}
 
-	return kind
+	return "JS." + kind
 }

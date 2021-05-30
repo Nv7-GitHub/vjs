@@ -36,10 +36,10 @@ func addComponent(comp string) {
 		}
 	}
 
-	fmt.Fprintf(out, "interface JS.%s {\n", comp)
+	fmt.Fprintf(out, "interface %s {\n", comp)
 
 	for _, val := range c.Implements {
-		out.WriteString("  JS." + val + "\n")
+		out.WriteString("  " + val + "\n")
 	}
 
 	// Add readonly
