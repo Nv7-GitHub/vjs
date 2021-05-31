@@ -8,6 +8,8 @@ import (
 var added = make(map[string]Empty)
 
 func addComponent(comp string) {
+	comp = strings.ReplaceAll(comp, "JS.", "")
+
 	_, exists := added[comp]
 	if exists {
 		return
@@ -36,7 +38,7 @@ func addComponent(comp string) {
 		}
 	}
 
-	fmt.Fprintf(out, "interface %s {\n", comp)
+	fmt.Fprintf(out, "interface %s {\n", getKind(comp))
 
 	for _, val := range c.Implements {
 		out.WriteString("  " + val + "\n")
@@ -66,7 +68,7 @@ func addComponent(comp string) {
 			addComponent(k)
 
 			if param.Name == "type" {
-				param.Name = "type_"
+				param.Name = "typ"
 			}
 
 			fmt.Fprintf(params, "%s %s", param.Name, k)
@@ -88,7 +90,7 @@ func addField(field Property) {
 	}
 
 	if field.Name == "type" {
-		field.Name = "type_"
+		field.Name = "typ"
 	}
 
 	fmt.Fprintf(out, "  %s %s\n", strings.ReplaceAll(field.Name, "?", ""), field.Type)
