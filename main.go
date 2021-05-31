@@ -10,12 +10,17 @@ import (
 var tsCode string
 
 var decls = make(map[string]Interface)
+var vars = make(map[string]Variable)
+var types = make(map[string]Type)
 var out = &strings.Builder{}
 
 func main() {
 	decls = parseCode(tsCode)
 
-	addComponent("HTMLElement")
+	addGlobals()
+	for comp := range decls {
+		addComponent(comp)
+	}
 
 	// Save to file
 	outFile, err := os.Create("vjs.js.v")

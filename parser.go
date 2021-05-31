@@ -9,6 +9,8 @@ var interfaceRe = regexp.MustCompile(`(?m)interface (.+) {\n((?:.+?\n)+)}`)
 var sigRe = regexp.MustCompile(`(?:(?:(.+) extends (?:(.+)(?:, )?)+)|(.+))`)
 var propRe = regexp.MustCompile(`    (?:(.+?)(?:<.+>)?\((.+)?\): (.+);)?(?:(?:(readonly) )?(.+?): (.+);)?`)
 var funcRe = regexp.MustCompile(`(.+?): ((\((.+?)\) => (.+?))|(?:.+?)), `)
+var varRe = regexp.MustCompile(`declare var (.+?): (.+);`)
+var typeRe = regexp.MustCompile(`type (.+) = (.+?)("|;)`)
 
 func parseCode(code string) map[string]Interface {
 	out := make(map[string]Interface)
@@ -72,5 +74,27 @@ func parseCode(code string) map[string]Interface {
 
 		out[in.Name] = in
 	}
+
+	varsFound := varRe.FindAllStringSubmatch(code, -1)
+	for _, match := range varsFound {
+		vars[match[1]] = Variable{
+			Name: match[1],
+			Type: match[2],
+		}
+	}
+
+	typesFound := typeRe.FindAllStringSubmatch(code, -1)
+	for _, kind := range typesFound {
+		k := kind[2]
+		if strings.Contains(k, "\"") {
+			k = "string"
+		}
+
+		types[kind[1]] = Type{
+			Name: kind[1],
+			Type: k,
+		}
+	}
+
 	return out
 }

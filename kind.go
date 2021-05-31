@@ -9,6 +9,7 @@ var kindMap = map[string]string{
 	"void":    "nil",
 	"any":     "any",
 	"boolean": "bool",
+	"int":     "int",
 }
 
 func init() {
@@ -18,6 +19,8 @@ func init() {
 }
 
 func getKind(kind string) string {
+	kind = strings.ReplaceAll(kind, " & ", " | ")
+
 	if strings.Contains(kind, "<") {
 		return getKind(kind[:strings.Index(kind, "<")])
 	}

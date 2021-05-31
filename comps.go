@@ -7,15 +7,30 @@ import (
 
 var added = make(map[string]Empty)
 
-func addComponent(comp string) {
-	comp = strings.ReplaceAll(comp, "JS.", "")
-
+func isFinished(comp string) bool {
 	_, exists := added[comp]
 	if exists {
-		return
+		return true
 	}
 	_, exists = kindMap[comp]
 	if exists {
+		return true
+	}
+
+	comp = getKind(comp)
+	_, exists = added[comp]
+	if exists {
+		return true
+	}
+	_, exists = kindMap[comp]
+	return exists
+}
+
+func addComponent(comp string) {
+	comp = strings.ReplaceAll(comp, "[]", "")
+	comp = strings.ReplaceAll(comp, "JS.", "")
+
+	if isFinished(comp) {
 		return
 	}
 	added[comp] = Empty{}

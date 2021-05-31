@@ -25,3 +25,13 @@ type Property struct {
 	Name       string
 	Type       string
 }
+
+type Variable struct {
+	Name string
+	Type string
+}
+
+type Type struct {
+	Name string
+	Type string
+}
