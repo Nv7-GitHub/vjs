@@ -3,13 +3,13 @@ package main
 import "strings"
 
 var kindMap = map[string]string{
-	"number":  "int",
-	"string":  "string",
+	"number":  "JS.Number",
+	"string":  "JS.String",
 	"null":    "nil",
 	"void":    "nil",
-	"any":     "any",
-	"boolean": "bool",
-	"int":     "int",
+	"any":     "voidptr",
+	"boolean": "JS.Boolean",
+	"int":     "JS.Number",
 }
 
 func init() {

@@ -93,7 +93,9 @@ func addComponent(comp string) {
 			}
 		}
 
-		fmt.Fprintf(out, "  %s(%s)%s\n", method.Name, params.String(), retKind)
+		if retKind != "nil" {
+			fmt.Fprintf(out, "  %s(%s)%s\n", method.Name, params.String(), retKind)
+		}
 	}
 
 	out.WriteString("}\n\n")

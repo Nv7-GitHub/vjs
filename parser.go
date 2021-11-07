@@ -53,6 +53,9 @@ func parseCode(code string) map[string]Interface {
 					if par[5] != "" {
 						typ = par[5]
 					}
+					if par[1][len(par[1])-1] == '?' {
+						par[1] = par[1][:len(par[1])-1]
+					}
 					pars[i] = Parameter{
 						Name: par[1],
 						Type: typ,
